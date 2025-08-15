@@ -64,9 +64,73 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "User does not exist!" });
+    }
+
+    const comparePassword = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!comparePassword) {
+      return res.status(401).json({ message: "Invalid credentials!" });
+    }
+
+    const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      user: {
+        id: existingUser.id,
+        email: existingUser.email,
+        name: existingUser.name,
+        role: existingUser.role,
+        image: existingUser.image,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
 };
 
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json({
+    success: "true",
+    message: "Logged out successfully",
+  });
+};
 
-export const check = async (req, res) => {};
+export const check = async (req, res) => {
+  try {
+    return res.status(200).json({
+      message: "User authenticated successfully",
+      user: req.user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
