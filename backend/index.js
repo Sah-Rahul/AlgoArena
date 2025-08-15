@@ -10,9 +10,11 @@ app.use(express.json());
 
 // import routes
 import authRoutes from "./src/routes/auth.routes.js";
+import problemRoutes from "./src/routes/problem.routes.js";
 
 // use routes
 app.use("/api/v1/auth", authRoutes);
+app.use('/api/v1/problems', problemRoutes)
 
 app.get("/", (req, res) => {
   res.send("Server is running ✔✔");
