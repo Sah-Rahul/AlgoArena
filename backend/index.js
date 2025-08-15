@@ -12,11 +12,13 @@ app.use(express.json());
 import authRoutes from "./src/routes/auth.routes.js";
 import problemRoutes from "./src/routes/problem.routes.js";
 import excuteRoutes from "./src/routes/excute.routes.js";
+import submissionRoutes from "./src/routes/submission.routes.js";
 
 // use routes
 app.use("/api/v1/auth", authRoutes);
 app.use('/api/v1/problems', problemRoutes)
 app.use('/api/v1/excute-code', excuteRoutes)
+app.use('/api/v1/submission', submissionRoutes)
 
 app.get("/", (req, res) => {
   res.send("Server is running ✔✔");
