@@ -2,7 +2,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 
-const Signup: React.FC = () => {
+const Signup = () => {
   const navigate = useNavigate();
 
   return (

@@ -2,7 +2,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 
-const Form: React.FC = () => {
+const Login = () => {
   const navigate = useNavigate();
 
   return (
@@ -111,4 +111,4 @@ const Form: React.FC = () => {
   );
 };
 
-export default Form;
+export default Login;
