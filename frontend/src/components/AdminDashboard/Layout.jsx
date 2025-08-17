@@ -12,7 +12,9 @@ import { useState } from "react";
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+
+  console.log(location.pathname);
 
   const sideBarMenu = [
     { key: "/admin/dashboard", icon: <FaHome />, label: "DashBoard" },
@@ -44,7 +46,7 @@ const Layout = ({ children }) => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full bg-red-500 text-white z-50 overflow-hidden
+        className={`${collapsed} fixed top-0 left-0 h-full bg-[#1C352D] text-white z-50 overflow-hidden
           transition-all duration-300 ${collapsed ? "w-20" : "w-[260px]"}`}
       >
         <h2
@@ -101,7 +103,7 @@ const Layout = ({ children }) => {
         } h-screen overflow-hidden`}
       >
         {/* Navbar */}
-        <nav className="h-16 bg-orange-500 px-6 flex items-center justify-between sticky top-0 z-10 shadow">
+        <nav className="h-16 bg-[#A6B28B] px-6 flex items-center justify-between sticky top-0 z-10 shadow">
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="h-10 w-10 cursor-pointer text-white"
@@ -110,9 +112,9 @@ const Layout = ({ children }) => {
           </button>
           <div className="text-white font-semibold">Navbar here</div>
         </nav>
-
         {/* Scrollable Content */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+
+        <main className="flex-1 overflow-y-auto p-3 bg-gray-50">
           {children}
         </main>
       </section>
