@@ -114,7 +114,7 @@ const Layout = ({ children }) => {
         </nav>
         {/* Scrollable Content */}
 
-        <main className="flex-1 overflow-y-auto p-3 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-3 bg-[#000]">
           {children}
         </main>
       </section>

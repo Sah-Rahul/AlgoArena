@@ -2,10 +2,12 @@ import { useState } from "react";
 import Layout from "./Layout";
 import { FiSearch } from "react-icons/fi";
 import { FaPlus, FaSortAlphaDown, FaRegBookmark } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 import problemData from "../../problemData/problemdata.json";
 
 const PracticeProblems = () => {
-  const [open, setOpen] = useState(false); 
+  const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState("Default");
 
   const handleSelect = (option) => {
@@ -18,12 +20,12 @@ const PracticeProblems = () => {
     if (sortBy === "Easy") return a.difficulty === "Easy" ? -1 : 1;
     if (sortBy === "Medium") return a.difficulty === "Medium" ? -1 : 1;
     if (sortBy === "Hard") return a.difficulty === "Hard" ? -1 : 1;
-    return 0; 
+    return 0;
   });
 
   return (
     <Layout>
-      <div className="p-6 bg-black min-h-screen text-white">
+      <div className="p-6 bg-[#130a0ab9] min-h-screen text-white">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
           <h2 className="text-xl font-semibold">Practice Problems</h2>
@@ -155,7 +157,7 @@ const PracticeProblems = () => {
                   </td>
                   {/* Solve */}
                   <td className="py-3 px-4">
-                    <button className="px-4 py-1 bg-yellow-500 text-black rounded-md text-sm font-medium hover:bg-yellow-400">
+                    <button className="px-4 cursor-pointer py-1 border-1 border-yellow-500  rounded-md text-sm font-medium hover:bg-yellow-400">
                       Solve
                     </button>
                   </td>
@@ -163,6 +165,14 @@ const PracticeProblems = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="mt-5 flex items-center  gap-2 justify-end">
+          <button className="h-12 w-12  ">
+            <IoIosArrowBack className="text-yellow-500 text-3xl cursor-pointer"/>
+          </button>
+          <button>
+            <IoIosArrowForward className="text-yellow-500 text-3xl cursor-pointer"/>
+          </button>
         </div>
       </div>
     </Layout>
