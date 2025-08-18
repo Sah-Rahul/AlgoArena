@@ -2,26 +2,83 @@ import { useState } from "react";
 import Layout from "./Layout";
 import { FiSearch } from "react-icons/fi";
 import { FaPlus, FaSortAlphaDown, FaRegBookmark } from "react-icons/fa";
-import { IoIosArrowForward } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import problemData from "../../problemData/problemdata.json";
+import companiesData from "../../problemData/companies.json";
+
+const topicsData = [
+  { name: "Array", count: 24 },
+  { name: "String", count: 7 },
+  { name: "Two Pointers", count: 6 },
+  { name: "Dynamic Programming", count: 6 },
+  { name: "Math", count: 5 },
+  { name: "DFS", count: 5 },
+];
 
 const PracticeProblems = () => {
-  const [open, setOpen] = useState(false);
+  const [openSort, setOpenSort] = useState(false);
   const [sortBy, setSortBy] = useState("Default");
+  const [activeTab, setActiveTab] = useState("companies");
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("All");
 
-  const handleSelect = (option) => {
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const problemsPerPage = 10;
+
+  const handleSortSelect = (option) => {
     setSortBy(option);
-    setOpen(false);
+    setOpenSort(false);
   };
 
-  // Sort problemData based on sortBy
-  const sortedProblems = [...problemData].sort((a, b) => {
+  let filteredProblems = problemData;
+
+  if (selectedCompany) {
+    filteredProblems = filteredProblems.filter((p) =>
+      p.tags.includes(selectedCompany)
+    );
+  }
+
+  if (selectedTopic) {
+    filteredProblems = filteredProblems.filter((p) =>
+      p.tags.includes(selectedTopic)
+    );
+  }
+
+  if (statusFilter !== "All") {
+    filteredProblems = filteredProblems.filter((p) =>
+      statusFilter === "Solved" ? p.status === "Solved" : p.status !== "Solved"
+    );
+  }
+
+  const sortedProblems = [...filteredProblems].sort((a, b) => {
     if (sortBy === "Easy") return a.difficulty === "Easy" ? -1 : 1;
     if (sortBy === "Medium") return a.difficulty === "Medium" ? -1 : 1;
     if (sortBy === "Hard") return a.difficulty === "Hard" ? -1 : 1;
     return 0;
   });
+
+  // Pagination logic
+  const indexOfLast = currentPage * problemsPerPage;
+  const indexOfFirst = indexOfLast - problemsPerPage;
+  const currentProblems = sortedProblems.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(sortedProblems.length / problemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSelectedCompany(null);
+    setSelectedTopic(null);
+    setCurrentPage(1);
+  };
 
   return (
     <Layout>
@@ -42,46 +99,110 @@ const PracticeProblems = () => {
             {/* Sort */}
             <div className="relative">
               <button
-                onClick={() => setOpen(!open)}
+                onClick={() => setOpenSort(!openSort)}
                 className="flex items-center cursor-pointer gap-2 bg-[#1e1e1e] rounded-lg px-4 py-2 text-sm hover:bg-[#2a2a2a]"
               >
                 <FaSortAlphaDown className="text-yellow-500" />
                 Sort: {sortBy}
               </button>
-              {open && (
-                <div className="absolute mt-2 w-40 bg-[#1e1e1e] rounded-lg shadow-lg">
-                  <button
-                    onClick={() => handleSelect("Default")}
-                    className="block cursor-pointer w-full text-left px-4 py-2 hover:bg-[#2a2a2a] text-white"
-                  >
-                    Default
-                  </button>
-                  <button
-                    onClick={() => handleSelect("Easy")}
-                    className="block cursor-pointer w-full text-left px-4 py-2 hover:bg-[#2a2a2a] text-white"
-                  >
-                    Easy
-                  </button>
-                  <button
-                    onClick={() => handleSelect("Medium")}
-                    className="block cursor-pointer w-full text-left px-4 py-2 hover:bg-[#2a2a2a] text-white"
-                  >
-                    Medium
-                  </button>
-                  <button
-                    onClick={() => handleSelect("Hard")}
-                    className="block w-full text-left px-4 py-2 hover:bg-[#2a2a2a] text-white"
-                  >
-                    Hard
-                  </button>
+              {openSort && (
+                <div className="absolute mt-2 w-40 bg-[#1e1e1e] rounded-lg shadow-lg z-10">
+                  {["Default", "Easy", "Medium", "Hard"].map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => handleSortSelect(option)}
+                      className="block cursor-pointer w-full text-left px-4 py-2 hover:bg-[#2a2a2a] text-white"
+                    >
+                      {option}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
-
-            {/* My Sheets */}
             <button className="bg-[#1e1e1e] cursor-pointer rounded-lg px-4 py-2 text-sm hover:bg-[#2a2a2a]">
               My Sheets
             </button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-4 border-b border-gray-700 flex gap-4">
+          <button
+            onClick={() => handleTabChange("companies")}
+            className={`cursor-pointer pb-2 font-semibold ${
+              activeTab === "companies"
+                ? "border-b-2 border-yellow-500 text-yellow-500"
+                : "text-gray-400 hover:text-yellow-500"
+            }`}
+          >
+            Companies
+          </button>
+          <button
+            onClick={() => handleTabChange("topics")}
+            className={`cursor-pointer pb-2 font-semibold ${
+              activeTab === "topics"
+                ? "border-b-2 border-yellow-500 text-yellow-500"
+                : "text-gray-400 hover:text-yellow-500"
+            }`}
+          >
+            Topics
+          </button>
+        </div>
+
+        {/* Selected filter */}
+        <div className="mb-3 text-yellow-400 font-semibold">
+          {activeTab === "companies" && selectedCompany && (
+            <>Selected Company: {selectedCompany}</>
+          )}
+          {activeTab === "topics" && selectedTopic && (
+            <>Selected Topic: {selectedTopic}</>
+          )}
+          {!selectedCompany && !selectedTopic && (
+            <>Select a {activeTab === "companies" ? "Company" : "Topic"}</>
+          )}
+        </div>
+
+        {/* Filters */}
+        <div className="bg-[#000] py-4 mb-4 px-6">
+          <div className="flex flex-wrap gap-4 justify-center items-center">
+            {activeTab === "companies" &&
+              companiesData.map((company) => (
+                <button
+                  key={company}
+                  onClick={() =>
+                    setSelectedCompany(
+                      selectedCompany === company ? null : company
+                    )
+                  }
+                  className={`cursor-pointer font-semibold px-4 py-2 rounded-md text-sm transition-all ${
+                    selectedCompany === company
+                      ? "bg-yellow-500 text-black"
+                      : "bg-white/90 text-black hover:bg-yellow-400"
+                  }`}
+                >
+                  {company}
+                </button>
+              ))}
+
+            {activeTab === "topics" &&
+              topicsData.map((topic) => (
+                <button
+                  key={topic.name}
+                  onClick={() =>
+                    setSelectedTopic(
+                      selectedTopic === topic.name ? null : topic.name
+                    )
+                  }
+                  className={`cursor-pointer font-semibold px-4 py-2 rounded-md text-sm transition-all flex items-center gap-2 ${
+                    selectedTopic === topic.name
+                      ? "bg-yellow-500 text-black"
+                      : "bg-white/90 text-black hover:bg-yellow-400"
+                  }`}
+                >
+                  {topic.name}
+                  <span className="text-gray-600">({topic.count})</span>
+                </button>
+              ))}
           </div>
         </div>
 
@@ -99,12 +220,18 @@ const PracticeProblems = () => {
               </tr>
             </thead>
             <tbody>
-              {sortedProblems.map((p) => (
+              {currentProblems.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-center py-10 text-gray-400">
+                    No problems found for selected filters.
+                  </td>
+                </tr>
+              )}
+              {currentProblems.map((p) => (
                 <tr
                   key={p.id}
                   className="border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition"
                 >
-                  {/* Problem */}
                   <td className="py-3 px-4">
                     <div className="flex flex-col">
                       <span className="font-medium flex items-center gap-2">
@@ -133,31 +260,28 @@ const PracticeProblems = () => {
                       </div>
                     </div>
                   </td>
-                  {/* Difficulty */}
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-0.5 rounded-md text-xs ${
                         p.difficulty === "Easy"
                           ? "bg-green-900 text-green-400"
-                          : "bg-yellow-900 text-yellow-400"
+                          : p.difficulty === "Medium"
+                          ? "bg-yellow-900 text-yellow-400"
+                          : "bg-red-900 text-red-400"
                       }`}
                     >
                       {p.difficulty}
                     </span>
                   </td>
-                  {/* Status */}
                   <td className="py-3 px-4 text-gray-400">{p.status}</td>
-                  {/* Notes */}
                   <td className="py-3 px-4 text-gray-400">
                     <FaPlus className="cursor-pointer hover:text-white" />
                   </td>
-                  {/* Add to Sheets */}
                   <td className="py-3 px-4 text-gray-400">
                     <FaRegBookmark className="cursor-pointer hover:text-white" />
                   </td>
-                  {/* Solve */}
                   <td className="py-3 px-4">
-                    <button className="px-4 cursor-pointer py-1 border-1 border-yellow-500  rounded-md text-sm font-medium hover:bg-yellow-400">
+                    <button className="px-4 cursor-pointer py-1 border-1 border-yellow-500 rounded-md text-sm font-medium hover:bg-yellow-400">
                       Solve
                     </button>
                   </td>
@@ -166,12 +290,29 @@ const PracticeProblems = () => {
             </tbody>
           </table>
         </div>
-        <div className="mt-5 flex items-center  gap-2 justify-end">
-          <button className="h-12 w-12  ">
-            <IoIosArrowBack className="text-yellow-500 text-3xl cursor-pointer"/>
+
+        {/* Pagination */}
+        <div className="mt-5 flex items-center justify-end gap-3">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`h-10 w-10 flex items-center justify-center rounded-full ${
+              currentPage === 1 ? "opacity-30" : "hover:bg-[#2a2a2a]"
+            }`}
+          >
+            <IoIosArrowBack className="text-yellow-500 cursor-pointer text-3xl" />
           </button>
-          <button>
-            <IoIosArrowForward className="text-yellow-500 text-3xl cursor-pointer"/>
+          <span className="text-gray-300">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`h-10 w-10 flex items-center justify-center rounded-full ${
+              currentPage === totalPages ? "opacity-30" : "hover:bg-[#2a2a2a]"
+            }`}
+          >
+            <IoIosArrowForward className="text-yellow-500 cursor-pointer text-3xl" />
           </button>
         </div>
       </div>

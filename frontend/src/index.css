@@ -1,2 +1,4 @@
 @import "tailwindcss";
 @import 'antd/dist/reset.css';
+@import "tailwindcss";
+@plugin "daisyui";

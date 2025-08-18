@@ -1,113 +1,141 @@
-import { FaGithub, FaTwitter } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaEye, FaEyeSlash, FaGithub, FaTwitter } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/auth/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          withCredentials: true, // 👉 important for cookies
+        }
+      );
+
+      if (res.data.success) {
+        navigate("/admin/dashboard"); // redirect on success
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Login failed");
+    }
+  };
+
   return (
-    <>
-      <div className="flex items-center justify-center h-screen bg-slate-700 ">
-        <div className="   flex items-center justify-center h-[600px] w-[800px]">
-          <div className="  flex items-center justify-center w-[50%]">
-            <div className="w-80 rounded-xl bg-gray-900 p-8 text-gray-100">
-              <p className="text-center text-2xl font-bold">Login</p>
-              <form className="mt-6">
-                <div className="mt-1 text-sm">
-                  <label
-                    htmlFor="username"
-                    className="block text-gray-400 mb-1"
-                  >
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    placeholder=""
-                    className="w-full rounded-md border border-gray-700 bg-gray-900 px-4 py-3 text-gray-100 focus:border-purple-300 outline-none"
-                  />
-                </div>
-                <div className="mt-4 text-sm">
-                  <label
-                    htmlFor="password"
-                    className="block text-gray-400 mb-1"
-                  >
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder=""
-                    className="w-full rounded-md border border-gray-700 bg-gray-900 px-4 py-3 text-gray-100 focus:border-purple-300 outline-none"
-                  />
-                  <div className="flex justify-end text-xs text-gray-400 mt-2 mb-3">
-                    <a
-                      href="#"
-                      className="text-white hover:underline hover:text-purple-300"
-                    >
-                      Forgot Password?
-                    </a>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full cursor-pointer bg-purple-300 py-3 text-center text-gray-900 font-semibold rounded-md"
-                >
-                  Sign in
-                </button>
-              </form>
+    <div className="flex items-center justify-center h-screen bg-slate-700">
+      <div className="w-full max-w-md p-8 rounded-lg bg-gray-900 text-white shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-              <div className="flex items-center pt-4">
-                <div className="flex-1 h-px bg-gray-700" />
-                <p className="px-3 text-sm text-gray-400">
-                  Login with social accounts
-                </p>
-                <div className="flex-1 h-px bg-gray-700" />
-              </div>
-
-              <div className="flex justify-center mt-4 space-x-2">
-                {/* Google */}
-                <button
-                  aria-label="Log in with Google"
-                  className="p-3 bg-transparent cursor-pointer   transition-transform duration-300 ease-in-out hover:scale-125"
-                >
-                  <FcGoogle />
-                </button>
-
-                {/* Twitter */}
-                <button
-                  aria-label="Log in with Twitter"
-                  className="p-3 bg-transparent cursor-pointer   transition-transform duration-300 ease-in-out hover:scale-125"
-                >
-                  <FaTwitter className="text-blue-400   hover:text-blue-500 transition" />
-                </button>
-
-                {/* GitHub */}
-                <button
-                  aria-label="Log in with GitHub"
-                  className="p-3 bg-transparent cursor-pointer   transition-transform duration-300 ease-in-out hover:scale-125"
-                >
-                  <FaGithub />
-                </button>
-              </div>
-
-              <p className="mt-4 text-center text-xs text-gray-400">
-                Don't have an account?{" "}
-                <button
-                  onClick={() => navigate("/signup")}
-                  className="cursor-pointer text-white hover:underline hover:text-purple-300"
-                >
-                  Sign up
-                </button>
-              </p>
-            </div>
+        <form onSubmit={handleSubmit}>
+          {/* Email */}
+          <div className="mb-4">
+            <label htmlFor="email" className="block mb-1 text-sm text-gray-400">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-purple-400"
+              required
+            />
           </div>
-          {/* <div className="  flex items-center justify-center w-[50%]"></div> */}
+
+          {/* Password */}
+          <div className="mb-4 relative">
+            <label htmlFor="password" className="block mb-1 text-sm text-gray-400">
+              Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-purple-400 pr-10"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-gray-400 hover:text-white"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+
+          {/* Forgot password */}
+          <div className="mb-4 text-right text-xs text-gray-400">
+            <a href="#" className="hover:underline">
+              Forgot password?
+            </a>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full bg-purple-300 text-gray-900 font-semibold py-2 rounded hover:bg-purple-400 transition"
+          >
+            Login
+          </button>
+        </form>
+
+        {/* Social login */}
+        <div className="my-6 text-center">
+          <p className="text-sm text-gray-400 mb-2">Or login with</p>
+          <div className="flex justify-center space-x-4">
+            <button className="p-2 text-xl hover:scale-110 transition">
+              <FcGoogle />
+            </button>
+            <button className="p-2 text-xl hover:scale-110 transition text-blue-400">
+              <FaTwitter />
+            </button>
+            <button className="p-2 text-xl hover:scale-110 transition">
+              <FaGithub />
+            </button>
+          </div>
         </div>
+
+        {/* Signup link */}
+        <p className="text-center text-sm text-gray-400">
+          Don’t have an account?{" "}
+          <button
+            onClick={() => navigate("/signup")}
+            className="text-purple-300 hover:underline"
+          >
+            Sign up
+          </button>
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

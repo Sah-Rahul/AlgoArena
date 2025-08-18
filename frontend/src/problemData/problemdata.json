@@ -6,7 +6,7 @@
     "more": "+3 more",
     "badge": "Demo",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "more": "+3 more",
     "badge": "Demo",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "more": "+4 more",
     "badge": "Demo",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 4,
@@ -32,7 +32,7 @@
     "tags": ["Google", "Amazon"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 5,
@@ -41,7 +41,7 @@
     "more": "+5 more",
     "badge": "Hot",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 6,
@@ -50,7 +50,7 @@
     "more": "+4 more",
     "badge": "Hot",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 7,
@@ -58,7 +58,7 @@
     "tags": ["Amazon", "Uber"],
     "more": "+3 more",
     "difficulty": "Hard",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 8,
@@ -66,7 +66,7 @@
     "tags": ["Tcs", "Wipro"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 9,
@@ -74,7 +74,7 @@
     "tags": ["Oracle", "Flipkart"],
     "more": "+2 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 10,
@@ -82,7 +82,7 @@
     "tags": ["Adobe", "Google"],
     "more": "+5 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 11,
@@ -90,7 +90,7 @@
     "tags": ["Amazon", "Microsoft"],
     "more": "+4 more",
     "difficulty": "Hard",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 12,
@@ -99,7 +99,7 @@
     "more": "+2 more",
     "badge": "Demo",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 13,
@@ -107,7 +107,7 @@
     "tags": ["Flipkart", "Google"],
     "more": "+6 more",
     "difficulty": "Hard",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 14,
@@ -115,7 +115,7 @@
     "tags": ["Amazon", "Uber"],
     "more": "+4 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 15,
@@ -123,7 +123,7 @@
     "tags": ["Google", "Adobe"],
     "more": "+3 more",
     "difficulty": "Hard",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 16,
@@ -131,7 +131,7 @@
     "tags": ["Tcs", "Atlassian"],
     "more": "+2 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 17,
@@ -140,7 +140,7 @@
     "more": "+3 more",
     "badge": "Hot",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 18,
@@ -148,7 +148,7 @@
     "tags": ["Wipro", "Infosys"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 19,
@@ -156,7 +156,7 @@
     "tags": ["Microsoft", "Google"],
     "more": "+5 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 20,
@@ -164,7 +164,7 @@
     "tags": ["Oracle", "Amazon"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 21,
@@ -172,7 +172,7 @@
     "tags": ["Google", "Flipkart"],
     "more": "+5 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 22,
@@ -180,7 +180,7 @@
     "tags": ["Adobe", "Tcs"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 23,
@@ -188,7 +188,7 @@
     "tags": ["Amazon", "Microsoft"],
     "more": "+4 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 24,
@@ -196,7 +196,7 @@
     "tags": ["Google", "Atlassian"],
     "more": "+3 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 25,
@@ -204,7 +204,7 @@
     "tags": ["Amazon", "Adobe"],
     "more": "+2 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 26,
@@ -212,7 +212,7 @@
     "tags": ["Google", "Tcs"],
     "more": "+4 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 27,
@@ -220,7 +220,7 @@
     "tags": ["Amazon", "Flipkart"],
     "more": "+2 more",
     "difficulty": "Hard",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 28,
@@ -228,7 +228,7 @@
     "tags": ["Oracle", "Wipro"],
     "more": "+2 more",
     "difficulty": "Easy",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 29,
@@ -236,7 +236,7 @@
     "tags": ["Google", "Amazon"],
     "more": "+3 more",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   },
   {
     "id": 30,
@@ -245,6 +245,6 @@
     "more": "+4 more",
     "badge": "New",
     "difficulty": "Medium",
-    "status": "-"
+    "status": "Unsolved"
   }
 ]
