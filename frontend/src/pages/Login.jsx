@@ -4,16 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { z } from "zod";
-import CodeAnimation from "../Components/CodeAnimation";
+import { useAuthStore } from "../store/useAuthStore";
+import toast from "react-hot-toast";
 
 // Validation schema
 const LoginSchema = z.object({
   email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be atleast 6 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { login, isLoginIn } = useAuthStore();
 
   const {
     register,
@@ -23,22 +25,27 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Submitted data (UI only):", data);
+  const onSubmit = async (data) => {
+    try {
+      await login(data);
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Login failed");
+    }
   };
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo / Header */}
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <Code className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Welcome</h1>
-              <p className="text-base-content/60">Sign up to your account</p>
+              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
+              <p className="text-base-content/60">Login to your account</p>
             </div>
           </div>
 
@@ -50,14 +57,16 @@ const Login = () => {
                 <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-base-content/40" />
+                </div>
                 <input
                   type="email"
                   {...register("email")}
-                  className={`input input-bordered w-full   ${
+                  className={`input input-bordered w-full ${
                     errors.email ? "input-error" : ""
-                  }`}
-                  placeholder="Algoarena@example.com"
+                  } `}
+                  placeholder="algoarena@example.com"
                 />
               </div>
               {errors.email && (
@@ -73,13 +82,15 @@ const Login = () => {
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-base-content/40" />
+                </div>
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`input  input-bordered w-full  ${
+                  className={`input input-bordered w-full ${
                     errors.password ? "input-error" : ""
-                  }`}
+                  }  pr-10`}
                   placeholder="••••••••"
                 />
                 <button
@@ -101,12 +112,17 @@ const Login = () => {
               )}
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
-              className="bg-orange-600 py-4 w-full font-semibold cursor-pointer !text-white"
+              disabled={isLoginIn}
+              className="bg-orange-600 py-4 w-full font-semibold cursor-pointer text-white flex items-center justify-center"
             >
-              Sign up
+              {isLoginIn ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                "Log In"
+              )}
             </button>
           </form>
 
@@ -122,8 +138,10 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right Side Image or Pattern */}
-      <div className="hidden w-[500px] lg:flex flex-col justify-center items-center bg-base-200 text-center p-12"></div>
+      {/* Right Side */}
+      <div className="hidden w-[500px] lg:flex flex-col justify-center items-center bg-base-200 text-center p-12">
+        {/* You can place CodeAnimation or image here */}
+      </div>
     </div>
   );
 };

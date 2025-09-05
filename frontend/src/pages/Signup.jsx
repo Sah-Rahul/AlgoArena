@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { z } from "zod";
-import CodeAnimation from "../Components/CodeAnimation";
+import { useAuthStore } from "../store/useAuthStore.js";
+import toast from "react-hot-toast";
 
-// Validation schema
 const SignUpSchema = z.object({
   email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be atleast 6 characters"),
-  name: z.string().min(3, "Name must be atleast 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(3, "Name must be at least 3 characters"),
 });
 
 const SignUpPage = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
+  const { signup, isSignup } = useAuthStore();
 
   const {
     register,
@@ -24,15 +26,21 @@ const SignUpPage = () => {
     resolver: zodResolver(SignUpSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Submitted data (UI only):", data);
+  //   On submit handler
+  const onSubmit = async (data) => {
+    try {
+      await signup(data);
+      navigate("/login");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Signup failed");
+    }
   };
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo / Header */}
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -57,10 +65,10 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   {...register("name")}
-                  className={`input input-bordered w-full   ${
+                  className={`input input-bordered w-full ${
                     errors.name ? "input-error" : ""
-                  }`}
-                  placeholder="Algo arena"
+                  }  `}
+                  placeholder="Algo Arena"
                 />
               </div>
               {errors.name && (
@@ -82,10 +90,10 @@ const SignUpPage = () => {
                 <input
                   type="email"
                   {...register("email")}
-                  className={`input input-bordered w-full   ${
+                  className={`input input-bordered w-full ${
                     errors.email ? "input-error" : ""
-                  }`}
-                  placeholder="Algoarena@example.com"
+                  }  `}
+                  placeholder="algoarena@example.com"
                 />
               </div>
               {errors.email && (
@@ -107,14 +115,14 @@ const SignUpPage = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`input  input-bordered w-full  ${
+                  className={`input input-bordered w-full ${
                     errors.password ? "input-error" : ""
-                  }`}
+                  }   pr-10`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -131,12 +139,17 @@ const SignUpPage = () => {
               )}
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
-              className="bg-orange-600 py-4 w-full font-semibold cursor-pointer !text-white"
+              disabled={isSignup}
+              className="bg-orange-600 py-4 w-full font-semibold cursor-pointer text-white flex items-center justify-center"
             >
-              Sign up
+              {isSignup ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                "Sign up"
+              )}
             </button>
           </form>
 
@@ -152,7 +165,7 @@ const SignUpPage = () => {
         </div>
       </div>
 
-      {/* Right Side Image or Pattern */}
+      {/* Right Side */}
       <div className="hidden w-[500px] lg:flex flex-col justify-center items-center bg-base-200 text-center p-12"></div>
     </div>
   );

@@ -8,7 +8,9 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
     const existingUser = await db.user.findUnique({
@@ -16,7 +18,9 @@ export const register = async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(409).json({ success: false, message: "User already exists!" });
+      return res
+        .status(409)
+        .json({ success: false, message: "User already exists!" });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -63,7 +67,9 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
     const existingUser = await db.user.findUnique({
@@ -71,13 +77,20 @@ export const login = async (req, res) => {
     });
 
     if (!existingUser) {
-      return res.status(404).json({ success: false, message: "User does not exist!" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User does not exist!" });
     }
 
-    const comparePassword = await bcrypt.compare(password, existingUser.password);
+    const comparePassword = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
 
     if (!comparePassword) {
-      return res.status(401).json({ success: false, message: "Invalid credentials!" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials!" });
     }
 
     const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET, {
@@ -86,9 +99,9 @@ export const login = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      sameSite: "lax",  
+      secure: false,  
+      maxAge: 1000 * 60 * 60 * 24 * 7,  
     });
 
     res.status(200).json({
