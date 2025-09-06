@@ -31,7 +31,7 @@ const Navbar = () => {
   ];
   return (
     <nav
-      className={`fixed top-[5px] left-0 right-0 mx-4 flex justify-between items-center border px-6 py-4 rounded-full text-sm z-50 shadow-md max-md:w-auto
+      className={`fixed top-[5px] left-0 right-0 mx-4 flex justify-between items-center border px-6 py-4 rounded-full text-sm z-[9999] shadow-md max-md:w-auto
       ${
         isDark
           ? "bg-black border-gray-700 text-white"
