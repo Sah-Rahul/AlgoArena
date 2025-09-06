@@ -5,7 +5,6 @@ import Navbar from "../Components/Navbar"
 const AddProblem = () => {
   return (
     <>
-    <Navbar />
     <CreateProblemForm />
     </>
   )

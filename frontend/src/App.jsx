@@ -1,15 +1,18 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
-import Layout from "./Components/Layout.jsx";
 import AdminRoute from "./Components/AdminRoute.jsx";
 import AddProblem from "./pages/AddProblem.jsx";
+import DashBoard from "./Components/userDashboard/DashBoard.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import Practice from "./pages/Practice.jsx";
 
 const App = () => {
   const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -18,7 +21,7 @@ const App = () => {
     checkAuth();
   }, []);
 
-  if (isCheckingAuth && !authUser) {
+  if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -27,37 +30,47 @@ const App = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-start">
-      <BrowserRouter>
-        <Routes>
-          {/* Layout route */}
-          <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={authUser ? <Home /> : <Navigate to="/login" />}
-            />
-          </Route>
+    <BrowserRouter>
+      <Routes>
+        {/* Public Home Page */}
+        <Route path="/" element={<Home />} />
 
-          {/* Public routes */}
-          <Route
-            path="/login"
-            element={!authUser ? <Login /> : <Navigate to="/" />}
-          />
-          <Route
-            path="/signup"
-            element={!authUser ? <Signup /> : <Navigate to="/login" />}
-          />
+        {/* Login Route */}
+        <Route
+          path="/login"
+          element={!authUser ? <Login /> : <Navigate to="/dashboard" />}
+        />
 
-          <Route element={<AdminRoute />}>
-            <Route
-              path="/add-problem"
-              element={authUser ? <AddProblem /> : <Navigate to={"/"} />}
-            />
-          </Route>
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
-    </div>
+        {/* Signup Route */}
+        <Route
+          path="/signup"
+          element={!authUser ? <Signup /> : <Navigate to="/login" />}
+        />
+
+        {/* Dashboard (Protected Route) */}
+        <Route
+          path="/dashboard"
+          element={
+            authUser ? (
+              <ProtectedRoute>
+                {" "}
+                <DashBoard />{" "}
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* Admin Only Route */}
+        <Route element={<AdminRoute />}>
+          <Route path="/add-problem" element={<AddProblem />} />
+        </Route>
+          <Route path="/practice" element={<Practice />} />
+      </Routes>
+
+      <Toaster />
+    </BrowserRouter>
   );
 };
 

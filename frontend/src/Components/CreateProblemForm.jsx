@@ -16,6 +16,7 @@ import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import DashboardLayout from "./userDashboard/dashboardLayout";
 
 const problemSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -588,482 +589,486 @@ const CreateProblemForm = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl">
-      <div className="card bg-base-100 shadow-xl border border-orange-200">
-        <div className="card-body p-6 md:p-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 pb-4 border-b border-orange-200">
-            <h2 className="card-title text-2xl md:text-3xl flex items-center gap-3 text-orange-600">
-              <FileText className="w-6 h-6 md:w-8 md:h-8 text-orange-500" />
-              Create Problem
-            </h2>
+    <DashboardLayout>
+      <div className="container mx-auto py-8 px-4 max-w-7xl">
+        <div className="card bg-base-100 shadow-xl border border-orange-200">
+          <div className="card-body p-6 md:p-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 pb-4 border-b border-orange-200">
+              <h2 className="card-title text-2xl md:text-3xl flex items-center gap-3 text-orange-600">
+                <FileText className="w-6 h-6 md:w-8 md:h-8 text-orange-500" />
+                Create Problem
+              </h2>
 
-            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
-              <div className="join">
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "DP"
-                      ? "btn-active bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600"
-                      : "bg-white border-orange-300 text-orange-500 hover:bg-orange-50"
-                  }`}
-                  onClick={() => setSampleType("DP")}
-                >
-                  DP Problem
-                </button>
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "string"
-                      ? "btn-active bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600"
-                      : " border-orange-300 text-orange-500 hover:bg-orange-50"
-                  }`}
-                  onClick={() => setSampleType("string")}
-                >
-                  String Problem
-                </button>
-              </div>
-              <button
-                type="button"
-                className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 gap-2"
-                onClick={loadSampleData}
-              >
-                <Download className="w-4 h-4" />
-                Load Sample
-              </button>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="form-control md:col-span-2">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold text-orange-700">
-                    Title
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  className="input input-bordered w-full text-base md:text-lg focus:border-orange-500 focus:ring-orange-500"
-                  {...register("title")}
-                  placeholder="Enter problem title"
-                />
-                {errors.title && (
-                  <label className="label">
-                    <span className="label-text-alt pt-2 text-red-500">
-                      {errors.title.message}
-                    </span>
-                  </label>
-                )}
-              </div>
-
-              <div className="form-control md:col-span-2">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold text-orange-700">
-                    Description
-                  </span>
-                </label>
-                <textarea
-                  className="textarea textarea-bordered min-h-32 w-full text-base md:text-lg p-4 resize-y focus:border-orange-500 focus:ring-orange-500"
-                  {...register("description")}
-                  placeholder="Enter problem description"
-                />
-                {errors.description && (
-                  <label className="label">
-                    <span className="label-text-alt pt-2 text-red-500">
-                      {errors.description.message}
-                    </span>
-                  </label>
-                )}
-              </div>
-
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold text-orange-700">
-                    Difficulty
-                  </span>
-                </label>
-                <select
-                  className="select select-bordered w-full text-base md:text-lg focus:border-orange-500 focus:ring-orange-500"
-                  {...register("difficulty")}
-                >
-                  <option value="EASY">Easy</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HARD">Hard</option>
-                </select>
-                {errors.difficulty && (
-                  <label className="label">
-                    <span className="label-text-alt  text-red-500">
-                      {errors.difficulty.message}
-                    </span>
-                  </label>
-                )}
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 text-orange-700">
-                  <BookOpen className="w-5 h-5 text-orange-600" />
-                  Tags
-                </h3>
-                <button
-                  type="button"
-                  className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-sm"
-                  onClick={() => appendTag("")}
-                >
-                  <Plus className="w-4 h-4 mr-1" /> Add Tag
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {tagFields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      className="input input-bordered flex-1 focus:border-orange-500 focus:ring-orange-500"
-                      {...register(`tags.${index}`)}
-                      placeholder="Enter tag"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-ghost btn-square btn-sm text-red-500 hover:bg-red-50"
-                      onClick={() => removeTag(index)}
-                      disabled={tagFields.length === 1}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              {errors.tags && (
-                <div className="mt-2">
-                  <span className="text-red-500 text-sm">
-                    {errors.tags.message}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Test Cases */}
-            <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 text-orange-700">
-                  <CheckCircle2 className="w-5 h-5 text-orange-600" />
-                  Test Cases
-                </h3>
-                <button
-                  type="button"
-                  className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-sm"
-                  onClick={() => appendTestCase({ input: "", output: "" })}
-                >
-                  <Plus className="w-4 h-4 mr-1" /> Add Test Case
-                </button>
-              </div>
-              <div className="space-y-6">
-                {testCaseFields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="card bg-base-100 shadow-md border border-orange-100"
+              <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
+                <div className="join">
+                  <button
+                    type="button"
+                    className={`btn join-item ${
+                      sampleType === "DP"
+                        ? "btn-active bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600"
+                        : "bg-white border-orange-300 text-orange-500 hover:bg-orange-50"
+                    }`}
+                    onClick={() => setSampleType("DP")}
                   >
-                    <div className="card-body p-4 md:p-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-base md:text-lg font-semibold text-orange-700">
-                          Test Case #{index + 1}
-                        </h4>
-                        <button
-                          type="button"
-                          className="btn btn-ghost btn-sm text-red-500 hover:bg-red-50"
-                          onClick={() => removeTestCase(index)}
-                          disabled={testCaseFields.length === 1}
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" /> Remove
-                        </button>
-                      </div>
-                      <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <div className="     form-control">
-                          <label className="label pb-2">
-                            <span className="label-text font-medium text-orange-700">
-                              Input
-                            </span>
-                          </label>
-                          <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                            {...register(`testcases.${index}.input`)}
-                            placeholder="Enter test case input"
-                          />
-                          {errors.testcases?.[index]?.input && (
-                            <label className="label">
-                              <span className="label-text-alt pt-2 text-red-500">
-                                {errors.testcases[index].input.message}
-                              </span>
-                            </label>
-                          )}
-                        </div>
-
-                        <div className="form-control">
-                          <label className="label">
-                            <span className="label-text pb-2 font-medium text-orange-700">
-                              Expected Output
-                            </span>
-                          </label>
-                          <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                            {...register(`testcases.${index}.output`)}
-                            placeholder="Enter expected output"
-                          />
-                          {errors.testcases?.[index]?.output && (
-                            <label className="label">
-                              <span className="label-text-alt pt-2 text-red-500">
-                                {errors.testcases[index].output.message}
-                              </span>
-                            </label>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {errors.testcases && !Array.isArray(errors.testcases) && (
-                <div className="mt-2">
-                  <span className="text-red-500  text-sm">
-                    {errors.testcases.message}
-                  </span>
+                    DP Problem
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn join-item ${
+                      sampleType === "string"
+                        ? "btn-active bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600"
+                        : " border-orange-300 text-orange-500 hover:bg-orange-50"
+                    }`}
+                    onClick={() => setSampleType("string")}
+                  >
+                    String Problem
+                  </button>
                 </div>
-              )}
-            </div>
-
-            {/* Code Editor Sections */}
-            <div className="space-y-8">
-              {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
-                <div
-                  key={language}
-                  className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200"
+                <button
+                  type="button"
+                  className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 gap-2"
+                  onClick={loadSampleData}
                 >
-                  <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2 text-orange-700">
-                    <Code2 className="w-5 h-5 text-orange-600" />
-                    {language}
-                  </h3>
-
-                  <div className="space-y-6">
-                    {/* Starter Code */}
-                    <div className="card bg-base-100 shadow-md border border-orange-100">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 text-orange-700">
-                          Starter Code Template
-                        </h4>
-                        <div className="border border-orange-200 rounded-md overflow-hidden">
-                          <Controller
-                            name={`codeSnippets.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onChange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.codeSnippets?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-red-500 text-sm">
-                              {errors.codeSnippets[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Reference Solution */}
-                    <div className="card bg-base-100 shadow-md border border-orange-100">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2 text-orange-700">
-                          <CheckCircle2 className="w-5 h-5 text-green-600" />
-                          Reference Solution
-                        </h4>
-                        <div className="border border-orange-200 rounded-md overflow-hidden">
-                          <Controller
-                            name={`referenceSolutions.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onChange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.referenceSolutions?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-red-500 text-sm">
-                              {errors.referenceSolutions[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Examples */}
-                    <div className="card bg-base-100 shadow-md border border-orange-100">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 text-orange-700">
-                          Example
-                        </h4>
-                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="pb-2 label-text font-medium text-orange-700">
-                                Input
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                              {...register(`examples.${language}.input`)}
-                              placeholder="Example input"
-                            />
-                            {errors.examples?.[language]?.input && (
-                              <label className="label">
-                                <span className="label-text-alt pt-2 text-red-500">
-                                  {errors.examples[language].input.message}
-                                </span>
-                              </label>
-                            )}
-                          </div>
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="label-text pb-2 font-medium text-orange-700">
-                                Output
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                              {...register(`examples.${language}.output`)}
-                              placeholder="Example output"
-                            />
-                            {errors.examples?.[language]?.output && (
-                              <label className="label">
-                                <span className="label-text-alt pt-2 text-red-500">
-                                  {errors.examples[language].output.message}
-                                </span>
-                              </label>
-                            )}
-                          </div>
-                          <div className="form-control md:col-span-2">
-                            <label className="label">
-                              <span className="label-text pb-2 font-medium text-orange-700">
-                                Explanation
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                              {...register(`examples.${language}.explanation`)}
-                              placeholder="Explain the example"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  <Download className="w-4 h-4" />
+                  Load Sample
+                </button>
+              </div>
             </div>
 
-            {/* Additional Information */}
-            <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
-              <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2 text-orange-700">
-                <Lightbulb className="w-5 h-5 text-orange-600" />
-                Additional Information
-              </h3>
-              <div className="space-y-6">
-                <div className="form-control">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Basic Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="form-control md:col-span-2">
                   <label className="label">
-                    <span className="label-text pb-2 font-medium text-orange-700">
-                      Constraints
+                    <span className="label-text text-base md:text-lg font-semibold text-orange-700">
+                      Title
                     </span>
                   </label>
-                  <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                    {...register("constraints")}
-                    placeholder="Enter problem constraints"
+                  <input
+                    type="text"
+                    className="input input-bordered w-full text-base md:text-lg focus:border-orange-500 focus:ring-orange-500"
+                    {...register("title")}
+                    placeholder="Enter problem title"
                   />
-                  {errors.constraints && (
+                  {errors.title && (
                     <label className="label">
                       <span className="label-text-alt pt-2 text-red-500">
-                        {errors.constraints.message}
+                        {errors.title.message}
                       </span>
                     </label>
                   )}
                 </div>
-                <div className="form-control">
+
+                <div className="form-control md:col-span-2">
                   <label className="label">
-                    <span className="label-text pb-2 font-medium text-orange-700">
-                      Hints (Optional)
+                    <span className="label-text text-base md:text-lg font-semibold text-orange-700">
+                      Description
                     </span>
                   </label>
                   <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                    {...register("hints")}
-                    placeholder="Enter hints for solving the problem"
+                    className="textarea textarea-bordered min-h-32 w-full text-base md:text-lg p-4 resize-y focus:border-orange-500 focus:ring-orange-500"
+                    {...register("description")}
+                    placeholder="Enter problem description"
                   />
+                  {errors.description && (
+                    <label className="label">
+                      <span className="label-text-alt pt-2 text-red-500">
+                        {errors.description.message}
+                      </span>
+                    </label>
+                  )}
                 </div>
+
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text pb-2  font-medium text-orange-700">
-                      Editorial (Optional)
+                    <span className="label-text text-base md:text-lg font-semibold text-orange-700">
+                      Difficulty
                     </span>
                   </label>
-                  <textarea
-                    className="textarea textarea-bordered min-h-32 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
-                    {...register("editorial")}
-                    placeholder="Enter problem editorial/solution explanation"
-                  />
+                  <select
+                    className="select select-bordered w-full text-base md:text-lg focus:border-orange-500 focus:ring-orange-500"
+                    {...register("difficulty")}
+                  >
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                  </select>
+                  {errors.difficulty && (
+                    <label className="label">
+                      <span className="label-text-alt  text-red-500">
+                        {errors.difficulty.message}
+                      </span>
+                    </label>
+                  )}
                 </div>
               </div>
-            </div>
 
-            <div className="card-actions justify-end pt-4 border-t border-orange-200">
-              <button
-                type="submit"
-                className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-lg gap-2"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="loading loading-spinner text-white"></span>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-5 h-5" />
-                    Create Problem
-                  </>
+              {/* Tags */}
+              <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 text-orange-700">
+                    <BookOpen className="w-5 h-5 text-orange-600" />
+                    Tags
+                  </h3>
+                  <button
+                    type="button"
+                    className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-sm"
+                    onClick={() => appendTag("")}
+                  >
+                    <Plus className="w-4 h-4 mr-1" /> Add Tag
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {tagFields.map((field, index) => (
+                    <div key={field.id} className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        className="input input-bordered flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        {...register(`tags.${index}`)}
+                        placeholder="Enter tag"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-square btn-sm text-red-500 hover:bg-red-50"
+                        onClick={() => removeTag(index)}
+                        disabled={tagFields.length === 1}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {errors.tags && (
+                  <div className="mt-2">
+                    <span className="text-red-500 text-sm">
+                      {errors.tags.message}
+                    </span>
+                  </div>
                 )}
-              </button>
-            </div>
-          </form>
+              </div>
+
+              {/* Test Cases */}
+              <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 text-orange-700">
+                    <CheckCircle2 className="w-5 h-5 text-orange-600" />
+                    Test Cases
+                  </h3>
+                  <button
+                    type="button"
+                    className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-sm"
+                    onClick={() => appendTestCase({ input: "", output: "" })}
+                  >
+                    <Plus className="w-4 h-4 mr-1" /> Add Test Case
+                  </button>
+                </div>
+                <div className="space-y-6">
+                  {testCaseFields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="card bg-base-100 shadow-md border border-orange-100"
+                    >
+                      <div className="card-body p-4 md:p-6">
+                        <div className="flex justify-between items-center mb-4">
+                          <h4 className="text-base md:text-lg font-semibold text-orange-700">
+                            Test Case #{index + 1}
+                          </h4>
+                          <button
+                            type="button"
+                            className="btn btn-ghost btn-sm text-red-500 hover:bg-red-50"
+                            onClick={() => removeTestCase(index)}
+                            disabled={testCaseFields.length === 1}
+                          >
+                            <Trash2 className="w-4 h-4 mr-1" /> Remove
+                          </button>
+                        </div>
+                        <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                          <div className="     form-control">
+                            <label className="label pb-2">
+                              <span className="label-text font-medium text-orange-700">
+                                Input
+                              </span>
+                            </label>
+                            <textarea
+                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                              {...register(`testcases.${index}.input`)}
+                              placeholder="Enter test case input"
+                            />
+                            {errors.testcases?.[index]?.input && (
+                              <label className="label">
+                                <span className="label-text-alt pt-2 text-red-500">
+                                  {errors.testcases[index].input.message}
+                                </span>
+                              </label>
+                            )}
+                          </div>
+
+                          <div className="form-control">
+                            <label className="label">
+                              <span className="label-text pb-2 font-medium text-orange-700">
+                                Expected Output
+                              </span>
+                            </label>
+                            <textarea
+                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                              {...register(`testcases.${index}.output`)}
+                              placeholder="Enter expected output"
+                            />
+                            {errors.testcases?.[index]?.output && (
+                              <label className="label">
+                                <span className="label-text-alt pt-2 text-red-500">
+                                  {errors.testcases[index].output.message}
+                                </span>
+                              </label>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {errors.testcases && !Array.isArray(errors.testcases) && (
+                  <div className="mt-2">
+                    <span className="text-red-500  text-sm">
+                      {errors.testcases.message}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Code Editor Sections */}
+              <div className="space-y-8">
+                {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
+                  <div
+                    key={language}
+                    className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200"
+                  >
+                    <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2 text-orange-700">
+                      <Code2 className="w-5 h-5 text-orange-600" />
+                      {language}
+                    </h3>
+
+                    <div className="space-y-6">
+                      {/* Starter Code */}
+                      <div className="card bg-base-100 shadow-md border border-orange-100">
+                        <div className="card-body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4 text-orange-700">
+                            Starter Code Template
+                          </h4>
+                          <div className="border border-orange-200 rounded-md overflow-hidden">
+                            <Controller
+                              name={`codeSnippets.${language}`}
+                              control={control}
+                              render={({ field }) => (
+                                <Editor
+                                  height="300px"
+                                  language={language.toLowerCase()}
+                                  theme="vs-dark"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={{
+                                    minimap: { enabled: false },
+                                    fontSize: 14,
+                                    lineNumbers: "on",
+                                    roundedSelection: false,
+                                    scrollBeyondLastLine: false,
+                                    automaticLayout: true,
+                                  }}
+                                />
+                              )}
+                            />
+                          </div>
+                          {errors.codeSnippets?.[language] && (
+                            <div className="mt-2">
+                              <span className="text-red-500 text-sm">
+                                {errors.codeSnippets[language].message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Reference Solution */}
+                      <div className="card bg-base-100 shadow-md border border-orange-100">
+                        <div className="card-body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2 text-orange-700">
+                            <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            Reference Solution
+                          </h4>
+                          <div className="border border-orange-200 rounded-md overflow-hidden">
+                            <Controller
+                              name={`referenceSolutions.${language}`}
+                              control={control}
+                              render={({ field }) => (
+                                <Editor
+                                  height="300px"
+                                  language={language.toLowerCase()}
+                                  theme="vs-dark"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={{
+                                    minimap: { enabled: false },
+                                    fontSize: 14,
+                                    lineNumbers: "on",
+                                    roundedSelection: false,
+                                    scrollBeyondLastLine: false,
+                                    automaticLayout: true,
+                                  }}
+                                />
+                              )}
+                            />
+                          </div>
+                          {errors.referenceSolutions?.[language] && (
+                            <div className="mt-2">
+                              <span className="text-red-500 text-sm">
+                                {errors.referenceSolutions[language].message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Examples */}
+                      <div className="card bg-base-100 shadow-md border border-orange-100">
+                        <div className="card-body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4 text-orange-700">
+                            Example
+                          </h4>
+                          <div className="grid  grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            <div className="form-control">
+                              <label className="label">
+                                <span className="pb-2 label-text font-medium text-orange-700">
+                                  Input
+                                </span>
+                              </label>
+                              <textarea
+                                className="textarea textarea-bordered min-h-20 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                                {...register(`examples.${language}.input`)}
+                                placeholder="Example input"
+                              />
+                              {errors.examples?.[language]?.input && (
+                                <label className="label">
+                                  <span className="label-text-alt pt-2 text-red-500">
+                                    {errors.examples[language].input.message}
+                                  </span>
+                                </label>
+                              )}
+                            </div>
+                            <div className="form-control">
+                              <label className="label">
+                                <span className="label-text pb-2 font-medium text-orange-700">
+                                  Output
+                                </span>
+                              </label>
+                              <textarea
+                                className="textarea textarea-bordered min-h-20 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                                {...register(`examples.${language}.output`)}
+                                placeholder="Example output"
+                              />
+                              {errors.examples?.[language]?.output && (
+                                <label className="label">
+                                  <span className="label-text-alt pt-2 text-red-500">
+                                    {errors.examples[language].output.message}
+                                  </span>
+                                </label>
+                              )}
+                            </div>
+                            <div className="form-control md:col-span-2">
+                              <label className="label">
+                                <span className="label-text pb-2 font-medium text-orange-700">
+                                  Explanation
+                                </span>
+                              </label>
+                              <textarea
+                                className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                                {...register(
+                                  `examples.${language}.explanation`
+                                )}
+                                placeholder="Explain the example"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Additional Information */}
+              <div className="card bg-orange-50 p-4 md:p-6 shadow-md border border-orange-200">
+                <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2 text-orange-700">
+                  <Lightbulb className="w-5 h-5 text-orange-600" />
+                  Additional Information
+                </h3>
+                <div className="space-y-6">
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text pb-2 font-medium text-orange-700">
+                        Constraints
+                      </span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                      {...register("constraints")}
+                      placeholder="Enter problem constraints"
+                    />
+                    {errors.constraints && (
+                      <label className="label">
+                        <span className="label-text-alt pt-2 text-red-500">
+                          {errors.constraints.message}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text pb-2 font-medium text-orange-700">
+                        Hints (Optional)
+                      </span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered min-h-24 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                      {...register("hints")}
+                      placeholder="Enter hints for solving the problem"
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text pb-2  font-medium text-orange-700">
+                        Editorial (Optional)
+                      </span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered min-h-32 w-full p-3 resize-y focus:border-orange-500 focus:ring-orange-500"
+                      {...register("editorial")}
+                      placeholder="Enter problem editorial/solution explanation"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-actions justify-end pt-4 border-t border-orange-200">
+                <button
+                  type="submit"
+                  className="btn bg-orange-500 border-orange-500 text-white hover:bg-orange-600 hover:border-orange-600 btn-lg gap-2"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <span className="loading loading-spinner text-white"></span>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-5 h-5" />
+                      Create Problem
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
